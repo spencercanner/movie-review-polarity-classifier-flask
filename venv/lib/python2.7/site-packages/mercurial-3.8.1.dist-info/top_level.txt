@@ -1,0 +1,3 @@
+hgext
+hgext3rd
+mercurial
