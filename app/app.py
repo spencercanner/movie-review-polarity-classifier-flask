@@ -8,6 +8,8 @@ from sklearn import linear_model
 from sklearn .metrics import accuracy_score
 
 app = Flask(__name__)
+app.config.from_object(__name__)
+app.config.from_envvar('APP_SETTINGS', silent=True)
 
 
 @app.route('/')
@@ -84,11 +86,3 @@ def train_model():
         return render_template('train.html', accuracy=accuracy_score(test_labels, prediction))
     else:
         return  render_template('home.html')
-    
-if __name__ == '__main__':
-    app.config.update(
-        DEBUG=True,
-        TESTING=True,
-        TEMPLATES_AUTO_RELOAD=True
-    )
-    app.run()
