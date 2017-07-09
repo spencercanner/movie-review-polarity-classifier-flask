@@ -5,7 +5,7 @@ from flask import Flask, request, render_template
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn import svm
 from sklearn import linear_model
-from sklearn .metrics import classification_report
+from sklearn .metrics import accuracy_score
 
 app = Flask(__name__)
 
@@ -32,6 +32,8 @@ def review():
             prediction_text="You did not enjoy the movie... :("
 
         return render_template('result.html',prediction=prediction_text)
+    else:
+        render_template('home.html')
 
 
 @app.route('/train', methods=['POST', 'GET'])
@@ -79,7 +81,9 @@ def train_model():
         with open('vectorizer.pickle', 'wb') as fid:
             pickle.dump(vectorizer, fid, 2)
 
-        return render_template('train.html', accuracy=classification_report(test_labels, prediction))
+        return render_template('train.html', accuracy=accuracy_score(test_labels, prediction))
+    else:
+        return  render_template('home.html')
     
 if __name__ == '__main__':
     app.config.update(
