@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('APP_SETTINGS', silent=True)
 
-
+# This sets this default page to the home if there is no '/'
 @app.route('/')
 def home():
     return render_template('home.html')
