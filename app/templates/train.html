@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html>
-<title>Movie Review Polarity Classifier</title>
-<body>
+{% extends "layout.html" %}
+{% block title %}Training{% endblock %}
+{% block head %} {{ super() }} {% endblock %}
 
+{% block content %}
 <h3> Model Trained </h3>
-<p><h4> Accuracy {{ accuracy }} </h4></p>
+<h4>Accuracy: </h4>
+<ul>
+{% for model_accuracy in accuracy %}
+    <li>{{ model_accuracy }}</li>
+{% endfor %}
+</ul>
 
 <button>
     <a href="/">Go Home</a>
 </button>
-</body>
-</html>
+{% endblock %}

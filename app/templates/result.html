@@ -1,13 +1,16 @@
-<!DOCTYPE html>
-<html>
-<title>Movie Review Polarity Classifier</title>
-<body>
+{% extends "layout.html" %}
+{% block title %}Result{% endblock %}
+{% block head %} {{ super() }} {% endblock %}
 
-<h3> {{ prediction }} </h3>
+{% block content %}
+<h3>Results: </h3>
+<ul>
+    {% for prediction in predictions %}
+    <li>{{ prediction }}</li>
+    {% endfor %}
+</ul>
 
 <button>
     <a href="/">Go Home</a>
 </button>
-
-</body>
-</html>
+{% endblock %}

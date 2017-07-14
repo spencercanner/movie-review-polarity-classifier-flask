@@ -1,0 +1,25 @@
+
+
+
+.header__title {
+    font-size: 2rem;
+}
+
+.review-text {
+    width: 50%;
+    max-width: 50%;
+    padding: 10px;
+    border-radius: 3px;
+    height: 5rem;
+}
+
+
+.button-primary {
+    padding: 5px 15px;
+    background: #033649;
+    color: #E8DDCB;
+    border: 0 none;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+}

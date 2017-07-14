@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html>
-<title>Movie Review Polarity Classifier</title>
-<body>
+{% extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block head %} {{ super() }} {% endblock %}
 
+{% block content %}
 <form action = "/train" method="POST">
-    <p> Select Classifier :
-    <select name="classifier">
-    <option value="svm">Support Vector Machines</option>
-    <option value="logreg">Logistic Regression</option>
-    </select>
-    <p> <input type ="submit" value="Train" /> </p>
+    <p> Train Classifier :
+    <p><input type ="submit" value="Train" /> </p>
 </form>
 
 <form action = "/review" method="POST">
@@ -17,6 +13,4 @@
     <p> <input type="text" name="review"> </p>
     <p> <input type ="submit" value="Submit Review" /> </p>
 </form>
-
-</body>
-</html>
+{% endblock %}
