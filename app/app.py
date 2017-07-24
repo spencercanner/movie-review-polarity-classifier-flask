@@ -142,10 +142,6 @@ def plot_review_coefficients(classifier, review_vector, feature_names ):
     review_coef = [coef[index] for index in review_vector.indices]
     review_feature_names = [feature_names[index] for index in review_vector.indices]
     top_coefficients = np.argsort(np.absolute(review_coef))[-top_features:]
-    print top_coefficients
-    #top_positive_coefficients = np.argsort(review_coef)[-top_features:]
-    #top_negative_coefficients = np.argsort(review_coef)[:top_features]
-    #top_coefficients = np.hstack([top_negative_coefficients, top_positive_coefficients])
     review_coef = np.array(review_coef)
     review_feature_names = np.array(review_feature_names)
     plt.figure(figsize=(9, 4))
