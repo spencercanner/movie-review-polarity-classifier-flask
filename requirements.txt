@@ -1,4 +1,3 @@
--e git+https://github.com/spencercanner/movie-review-polarity-classifier-flask.git@480eac4760ee031223db6a08f210bad98da79155#egg=app
 click==6.7
 cycler==0.10.0
 Flask==0.12.2
