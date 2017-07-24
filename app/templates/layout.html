@@ -2,11 +2,22 @@
 <html>
 <head>
     {% block head %}
+    <link rel="stylesheet" href="https://sdks.shopifycdn.com/polaris/1.0.2/polaris.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <title>{% block title %}{% endblock %} - Movie Review Classifier</title>
     {% endblock %}
 </head>
 <body>
-{% block content %}{% endblock %}
+<div class="Polaris-Page">
+    {% block header %}{% endblock %}
+    <div class="Polaris-Page__Content">
+        <div class="Polaris-Layout">
+            <div class="Polaris-Layout__Section">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

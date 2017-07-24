@@ -1,11 +1,14 @@
 import os
 import pickle
+import matplotlib.pyplot as plt
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import svm
 from sklearn import linear_model
 from sklearn .metrics import accuracy_score
+import numpy as np
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -28,18 +31,23 @@ def review():
         vectorizer = pickle.load(vector_file)
         review_vector = vectorizer.transform([result['review']])
 
-
         predictions = []
 
         model_file = open('classifier-svm.pickle', 'rb')
         classifier = pickle.load(model_file)
         prediction = classifier.predict(review_vector)
-        predictions.append("Support Vector Machines: " + prediction[0])
+        plot = plot_review_coefficients(classifier, review_vector, vectorizer.get_feature_names())
+        plot.savefig('./app/static/images/review-svm.png', transparent='true', bbox_inches='tight', pad_inches=0)
+        predictions.append(["Support Vector Machines", format_prediction(prediction[0]),
+                            "./static/images/review-svm.png"])
 
         model_file = open('classifier-logreg.pickle', 'rb')
         classifier = pickle.load(model_file)
         prediction = classifier.predict(review_vector)
-        predictions.append("Logistic Regression: " + prediction[0])
+        plot = plot_review_coefficients(classifier, review_vector, vectorizer.get_feature_names())
+        plot.savefig('./app/static/images/review-logreg.png', transparent='true', bbox_inches='tight', pad_inches=0)
+        predictions.append(["Logistic Regression", format_prediction(prediction[0]),
+                            "./static/images/review-logreg.png"])
 
         return render_template('result.html',predictions=predictions)
     else:
@@ -81,7 +89,11 @@ def train_model():
         classifier = svm.LinearSVC()
         classifier.fit(train_vectors, train_labels)
         prediction = classifier.predict(test_vectors)
-        accuracy.append("Support Vector Machines: " + str(accuracy_score(test_labels, prediction)))
+        plot = plot_coefficients(classifier, vectorizer.get_feature_names())
+        plot.savefig('./app/static/images/svm.png', transparent='true', bbox_inches='tight', pad_inches=0)
+        accuracy.append(["Support Vector Machines", str(accuracy_score(test_labels, prediction)),
+                         './static/images/svm.png'])
+
 
         with open('classifier-svm.pickle', 'wb') as fid:
             pickle.dump(classifier, fid, 2)
@@ -90,11 +102,55 @@ def train_model():
         classifier = linear_model.LogisticRegression()
         classifier.fit(train_vectors, train_labels)
         prediction = classifier.predict(test_vectors)
-        accuracy.append("Logistic Regression: " + str(accuracy_score(test_labels, prediction)))
+        plot = plot_coefficients(classifier, vectorizer.get_feature_names())
+        plot.savefig('./app/static/images/logreg.png', bbox_inches='tight', pad_inches=0)
+        accuracy.append(["Logistic Regression", str(accuracy_score(test_labels, prediction)),
+                         './static/images/logreg.png'])
 
         with open('classifier-logreg.pickle', 'wb') as fid:
             pickle.dump(classifier, fid, 2)
 
         return render_template('train.html', accuracy=accuracy)
     else:
-        return  render_template('home.html')
+        return render_template('home.html')
+
+
+def format_prediction(prediction):
+    if prediction == 'pos':
+        return "That was a positive review."
+    else:
+        return "That was a negative review."
+
+
+def plot_coefficients(classifier, feature_names, top_features=10):
+    coef = classifier.coef_.ravel()
+    top_positive_coefficients = np.argsort(coef)[-top_features:]
+    top_negative_coefficients = np.argsort(coef)[:top_features]
+    top_coefficients = np.hstack([top_negative_coefficients, top_positive_coefficients])
+    plt.figure(figsize=(9, 4))
+    colors = ["red" if c < 0 else "green" for c in coef[top_coefficients]]
+    plt.bar(np.arange(2 * top_features), coef[top_coefficients], color=colors)
+    feature_names = np.array(feature_names)
+    plt.xticks(np.arange(0, 2 * top_features), feature_names[top_coefficients], rotation=60, ha="right")
+    plt.tight_layout()
+    return plt
+
+
+def plot_review_coefficients(classifier, review_vector, feature_names ):
+    top_features = int(len(review_vector.indices)) if len(review_vector.indices) < 20 else 20
+    coef = classifier.coef_.ravel()
+    review_coef = [coef[index] for index in review_vector.indices]
+    review_feature_names = [feature_names[index] for index in review_vector.indices]
+    top_coefficients = np.argsort(np.absolute(review_coef))[-top_features:]
+    print top_coefficients
+    #top_positive_coefficients = np.argsort(review_coef)[-top_features:]
+    #top_negative_coefficients = np.argsort(review_coef)[:top_features]
+    #top_coefficients = np.hstack([top_negative_coefficients, top_positive_coefficients])
+    review_coef = np.array(review_coef)
+    review_feature_names = np.array(review_feature_names)
+    plt.figure(figsize=(9, 4))
+    colors = ["red" if c < 0 else "green" for c in review_coef[top_coefficients]]
+    plt.bar(np.arange(top_features), review_coef[top_coefficients], color=colors)
+    plt.xticks(np.arange(0, top_features), review_feature_names[top_coefficients], rotation=60, ha="right")
+    plt.tight_layout()
+    return plt

@@ -2,16 +2,37 @@
 {% block title %}Training{% endblock %}
 {% block head %} {{ super() }} {% endblock %}
 
-{% block content %}
-<h3> Model Trained </h3>
-<h4>Accuracy: </h4>
-<ul>
-{% for model_accuracy in accuracy %}
-    <li>{{ model_accuracy }}</li>
-{% endfor %}
-</ul>
+{% block header %}
+<div class="Polaris-Page__Header Polaris-Page__Header--hasBreadcrumbs">
+    <div class="Polaris-Page__Navigation">
+        <nav role="navigation">
+            <a class="Polaris-Breadcrumbs__Breadcrumb" data-polaris-unstyled="true" href="/">
+                <span class="Polaris-Breadcrumbs__Icon">
+                    <span class="Polaris-Icon">
+                        <svg class="Polaris-Icon__Svg" viewBox="0 0 20 20">
+                            <path d="M12 16a.997.997 0 0 1-.707-.293l-5-5a.999.999 0 0 1 0-1.414l5-5a.999.999 0 1 1 1.414 1.414L8.414 10l4.293 4.293A.999.999 0 0 1 12 16" fill-rule="evenodd"></path>
+                        </svg>
+                    </span>
+                </span>
+                Home
+            </a>
+        </nav>
+    </div>
+    <h1 class="Polaris-DisplayText Polaris-DisplayText--sizeLarge">Model Training Results</h1>
+</div>
+{% endblock %}
 
-<button>
-    <a href="/">Go Home</a>
-</button>
+{% block content %}
+{% for model_accuracy in accuracy %}
+<div class="Polaris-Card">
+    <div class="Polaris-Card__Header">
+        <h2 class="Polaris-Heading">{{ model_accuracy[0] }}</h2>
+    </div>
+    <div class="Polaris-Card__Section">
+        <h4>Accuracy: {{ model_accuracy[1] }}</h4>
+        <br>
+        <img src="{{ model_accuracy[2] }}">
+    </div>
+</div>
+{% endfor %}
 {% endblock %}

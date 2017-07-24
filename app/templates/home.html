@@ -2,15 +2,79 @@
 {% block title %}Home{% endblock %}
 {% block head %} {{ super() }} {% endblock %}
 
-{% block content %}
-<form action = "/train" method="POST">
-    <p> Train Classifier :
-    <p><input type ="submit" value="Train" /> </p>
-</form>
+{% block header %}
+<div class="Polaris-Page__Header">
+    <h1 class="Polaris-DisplayText Polaris-DisplayText--sizeLarge">Movie Review Polarity Classifier</h1>
+</div>
+{% endblock%}
 
-<form action = "/review" method="POST">
-    <p> Submit a review:
-    <p> <input type="text" name="review"> </p>
-    <p> <input type ="submit" value="Submit Review" /> </p>
-</form>
+{% block content %}
+<script>
+    $(document).ready(function () {
+        var buttons = $(".Polaris-Button");
+        for (var button of buttons) {
+            $(button).on('click', function() {
+                $(this).addClass('Polaris-Button--disabled');
+                this.getElementsByClassName('Polaris-Button__Content')[0].innerHTML = 'Training...';
+                $(this).parents('form').get(0).submit();
+            })
+        }
+
+    })
+</script>
+<div class="Polaris-Card">
+    <div class="Polaris-Card__Header">
+        <h2 class="Polaris-Heading">Train Classifier</h2>
+    </div>
+    <div class="Polaris-Card__Section">
+        <form action = "/train" method="POST">
+            <div class="Polaris-FormLayout">
+                <div class="Polaris-FormLayout__Item">
+                    <p class="Polaris-DisplayText Polaris-DisplayText--Medium">
+                        The currently supported classifiers and Support Vector Machines and Linear Regression.
+                    </p>
+                </div>
+                <div class="Polaris-FormLayout__Item">
+                    <button type="button" class="Polaris-Button Polaris-Button--primary">
+                        <span class="Polaris-Button__Content">
+                            <span>Train Models</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="Polaris-Card">
+    <div class="Polaris-Card__Header">
+        <h2 class="Polaris-Heading">Submit a Review</h2>
+    </div>
+    <div class="Polaris-Card__Section">
+        <form action = "/review" method="POST">
+            <div class="Polaris-FormLayout">
+                <div class="Polaris-FormLayout__Item">
+                    <div class="Polaris-Labelled__LabelWrapper">
+                        <div class="Polaris-Label"><label id="TextField10Label" for="TextField10" class="Polaris-Label__Text">Movie Review</label></div>
+                    </div>
+                    <div class="Polaris-TextField Polaris-TextField--multiline">
+                        <textarea name="review" id="TextField10" class="Polaris-TextField__Input" aria-labelledby="TextField10Label" aria-invalid="false" style="height: 150px;"></textarea>
+                        <div class="Polaris-TextField__Backdrop"></div>
+                        <div aria-hidden="true" class="Polaris-TextField__Resizer">
+                            <div class="Polaris-TextField__DummyInput"><br></div>
+                            <div class="Polaris-TextField__DummyInput"><br></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="Polaris-FormLayout__Item">
+                    <button type="submit" class="Polaris-Button Polaris-Button--primary">
+                        <span class="Polaris-Button__Content">
+                            <span>Submit Review</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
