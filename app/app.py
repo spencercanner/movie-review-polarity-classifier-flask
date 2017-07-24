@@ -4,9 +4,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import svm
 from sklearn import linear_model
 from sklearn .metrics import accuracy_score

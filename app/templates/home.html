@@ -11,15 +11,16 @@
 {% block content %}
 <script>
     $(document).ready(function () {
-        var buttons = $(".Polaris-Button");
-        for (var button of buttons) {
-            $(button).on('click', function() {
-                $(this).addClass('Polaris-Button--disabled');
-                this.getElementsByClassName('Polaris-Button__Content')[0].innerHTML = 'Training...';
-                $(this).parents('form').get(0).submit();
-            })
-        }
-
+        $("#TrainingButton").on('click', function() {
+            $(this).addClass('Polaris-Button--disabled');
+            this.getElementsByClassName('Polaris-Button__Content')[0].innerHTML = 'Training...';
+            $(this).parents('form').get(0).submit();
+        })
+        $("#ReviewButton").on('click', function() {
+            $(this).addClass('Polaris-Button--disabled');
+            this.getElementsByClassName('Polaris-Button__Content')[0].innerHTML = 'Submitting...';
+            $(this).parents('form').get(0).submit();
+        })
     })
 </script>
 <div class="Polaris-Card">
@@ -35,7 +36,7 @@
                     </p>
                 </div>
                 <div class="Polaris-FormLayout__Item">
-                    <button type="button" class="Polaris-Button Polaris-Button--primary">
+                    <button type="button" class="Polaris-Button Polaris-Button--primary" id="TrainingButton">
                         <span class="Polaris-Button__Content">
                             <span>Train Models</span>
                         </span>
@@ -67,7 +68,7 @@
                     </div>
                 </div>
                 <div class="Polaris-FormLayout__Item">
-                    <button type="submit" class="Polaris-Button Polaris-Button--primary">
+                    <button type="submit" class="Polaris-Button Polaris-Button--primary" id="ReviewButton">
                         <span class="Polaris-Button__Content">
                             <span>Submit Review</span>
                         </span>
