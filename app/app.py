@@ -17,13 +17,24 @@ app.config.from_envvar('APP_SETTINGS', silent=True)
 
 classes = ['pos', 'neg']
 
+
+# Prevent caching, since image file names don't change
+@app.after_request
+def add_header(r):
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
 # This sets this default page to the home if there is no '/'
 @app.route('/')
 def home():
     return render_template('home.html')
 
 
-@app.route('/review', methods=['POST','GET'])
+@app.route('/review', methods=['POST', 'GET'])
 def review():
     if request.method == 'POST':
         result = request.form
@@ -50,7 +61,7 @@ def review():
         predictions.append(["Logistic Regression", format_prediction(prediction[0]),
                             "./static/images/review-logreg.png"])
 
-        return render_template('result.html',predictions=predictions)
+        return render_template('result.html', predictions=predictions)
     else:
         render_template('home.html')
 
@@ -137,7 +148,7 @@ def plot_coefficients(classifier, feature_names, top_features=10):
     return plt
 
 
-def plot_review_coefficients(classifier, review_vector, feature_names ):
+def plot_review_coefficients(classifier, review_vector, feature_names):
     top_features = int(len(review_vector.indices)) if len(review_vector.indices) < 20 else 20
     coef = classifier.coef_.ravel()
     review_coef = [coef[index] for index in review_vector.indices]
