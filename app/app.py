@@ -3,6 +3,7 @@ import pickle
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import datetime
 
 from flask import Flask, request, render_template
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -16,16 +17,6 @@ app.config.from_object(__name__)
 app.config.from_envvar('APP_SETTINGS', silent=True)
 
 classes = ['pos', 'neg']
-
-
-# Prevent caching, since image file names don't change
-@app.after_request
-def add_header(r):
-    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    r.headers["Pragma"] = "no-cache"
-    r.headers["Expires"] = "0"
-    r.headers['Cache-Control'] = 'public, max-age=0'
-    return r
 
 
 # This sets this default page to the home if there is no '/'
@@ -51,7 +42,7 @@ def review():
         plot = plot_review_coefficients(classifier, review_vector, vectorizer.get_feature_names())
         plot.savefig('./app/static/images/review-svm.png', transparent='true', bbox_inches='tight', pad_inches=0)
         predictions.append(["Support Vector Machines", format_prediction(prediction[0]),
-                            "./static/images/review-svm.png"])
+                            "./static/images/review-svm.png?nocache=" + str(datetime.datetime.now()).split('.')[0]])
 
         model_file = open('classifier-logreg.pickle', 'rb')
         classifier = pickle.load(model_file)
@@ -59,7 +50,7 @@ def review():
         plot = plot_review_coefficients(classifier, review_vector, vectorizer.get_feature_names())
         plot.savefig('./app/static/images/review-logreg.png', transparent='true', bbox_inches='tight', pad_inches=0)
         predictions.append(["Logistic Regression", format_prediction(prediction[0]),
-                            "./static/images/review-logreg.png"])
+                            "./static/images/review-logreg.png?nocache=" + str(datetime.datetime.now()).split('.')[0]])
 
         return render_template('result.html', predictions=predictions)
     else:
@@ -104,7 +95,7 @@ def train_model():
         plot = plot_coefficients(classifier, vectorizer.get_feature_names())
         plot.savefig('./app/static/images/svm.png', transparent='true', bbox_inches='tight', pad_inches=0)
         accuracy.append(["Support Vector Machines", str(accuracy_score(test_labels, prediction)),
-                         './static/images/svm.png'])
+                         './static/images/svm.png?nocache=' + str(datetime.datetime.now()).split('.')[0]])
 
 
         with open('classifier-svm.pickle', 'wb') as fid:
@@ -117,7 +108,7 @@ def train_model():
         plot = plot_coefficients(classifier, vectorizer.get_feature_names())
         plot.savefig('./app/static/images/logreg.png', bbox_inches='tight', pad_inches=0)
         accuracy.append(["Logistic Regression", str(accuracy_score(test_labels, prediction)),
-                         './static/images/logreg.png'])
+                         './static/images/logreg.png?nocache?' + str(datetime.datetime.now()).split('.')[0]])
 
         with open('classifier-logreg.pickle', 'wb') as fid:
             pickle.dump(classifier, fid, 2)
