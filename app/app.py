@@ -108,7 +108,7 @@ def train_model():
         plot = plot_coefficients(classifier, vectorizer.get_feature_names())
         plot.savefig('./app/static/images/logreg.png', bbox_inches='tight', pad_inches=0)
         accuracy.append(["Logistic Regression", str(accuracy_score(test_labels, prediction)),
-                         './static/images/logreg.png?nocache?' + str(datetime.datetime.now()).split('.')[0]])
+                         './static/images/logreg.png?nocache=' + str(datetime.datetime.now()).split('.')[0]])
 
         with open('classifier-logreg.pickle', 'wb') as fid:
             pickle.dump(classifier, fid, 2)
